@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tradutor por Voz</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="{{ url_for('static', filename='js/script.js') }}" defer></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Tradutor por Voz</h1>
+
+        <div class="controls">
+    <label for="origem">Idioma origem:</label>
+    <select id="origem">
+        <option value="pt-BR">Português (Brasil)</option>
+        <option value="en-US">Inglês (EUA)</option>
+        <option value="es-ES">Espanhol</option>
+        <option value="fr-FR">Francês</option>
+        <option value="de-DE">Alemão</option>
+        <option value="it-IT">Italiano</option>
+        <option value="ja-JP">Japonês</option>
+        <option value="ko-KR">Coreano</option>
+        <option value="zh-CN">Chinês (Simplificado)</option>
+        <option value="ru-RU">Russo</option>
+    </select>
+
+    <label for="destino">Idioma destino:</label>
+    <select id="destino">
+        <option value="pt">Português</option>
+        <option value="en">Inglês</option>
+        <option value="es">Espanhol</option>
+        <option value="fr">Francês</option>
+        <option value="de">Alemão</option>
+        <option value="it">Italiano</option>
+        <option value="ja">Japonês</option>
+        <option value="ko">Coreano</option>
+        <option value="zh-CN">Chinês (Simplificado)</option>
+        <option value="ru">Russo</option>
+    </select>
+
+    <button id="btnGravar">🎙️ Falar</button>
+</div>
+
+
+        <p><strong>Texto reconhecido:</strong> <span id="textoReconhecido"></span></p>
+        <p><strong>Tradução:</strong> <span id="traducao"></span></p>
+    </div>
+</body>
+</html>
