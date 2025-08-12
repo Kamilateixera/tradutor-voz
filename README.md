@@ -10,7 +10,7 @@ O usuário fala no microfone, a aplicação converte a voz em texto e traduz par
 - **Flask**
 - **SpeechRecognition**
 - **Deep Translator** ou **Googletrans**
-- **HTML + CSS + JavaScript + TypeScript + TypeScript** 
+- **HTML + CSS + JavaScript + TypeScript ** 
 
 ---
 
