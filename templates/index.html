@@ -12,40 +12,91 @@
         <h1>Tradutor por Voz</h1>
 
         <div class="controls">
-    <label for="origem">Idioma origem:</label>
-    <select id="origem">
-        <option value="pt-BR">Português (Brasil)</option>
-        <option value="en-US">Inglês (EUA)</option>
-        <option value="es-ES">Espanhol</option>
-        <option value="fr-FR">Francês</option>
-        <option value="de-DE">Alemão</option>
-        <option value="it-IT">Italiano</option>
-        <option value="ja-JP">Japonês</option>
-        <option value="ko-KR">Coreano</option>
-        <option value="zh-CN">Chinês (Simplificado)</option>
-        <option value="ru-RU">Russo</option>
-    </select>
+            <label for="origem">Idioma origem:</label>
+            <select id="origem">
+                <option value="pt-BR">Português (Brasil)</option>
+                <option value="en-US">Inglês (EUA)</option>
+                <option value="es-ES">Espanhol</option>
+                <option value="fr-FR">Francês</option>
+                <option value="de-DE">Alemão</option>
+                <option value="it-IT">Italiano</option>
+                <option value="ja-JP">Japonês</option>
+                <option value="ko-KR">Coreano</option>
+                <option value="zh-CN">Chinês (Simplificado)</option>
+                <option value="ru-RU">Russo</option>
+            </select>
 
-    <label for="destino">Idioma destino:</label>
-    <select id="destino">
-        <option value="pt">Português</option>
-        <option value="en">Inglês</option>
-        <option value="es">Espanhol</option>
-        <option value="fr">Francês</option>
-        <option value="de">Alemão</option>
-        <option value="it">Italiano</option>
-        <option value="ja">Japonês</option>
-        <option value="ko">Coreano</option>
-        <option value="zh-CN">Chinês (Simplificado)</option>
-        <option value="ru">Russo</option>
-    </select>
+            <label for="destino">Idioma destino:</label>
+            <select id="destino">
+                <option value="pt">Português</option>
+                <option value="en">Inglês</option>
+                <option value="es">Espanhol</option>
+                <option value="fr">Francês</option>
+                <option value="de">Alemão</option>
+                <option value="it">Italiano</option>
+                <option value="ja">Japonês</option>
+                <option value="ko">Coreano</option>
+                <option value="zh-CN">Chinês (Simplificado)</option>
+                <option value="ru">Russo</option>
+            </select>
 
-    <button id="btnGravar">🎙️ Falar</button>
-</div>
-
+            <button id="btnGravar">🎙️ Falar</button>
+        </div>
 
         <p><strong>Texto reconhecido:</strong> <span id="textoReconhecido"></span></p>
         <p><strong>Tradução:</strong> <span id="traducao"></span></p>
     </div>
+
+    <script>
+      document.getElementById("btnGravar").addEventListener("click", () => {
+        const origem = document.getElementById("origem").value;
+        const destino = document.getElementById("destino").value;
+
+        // Configura a API de reconhecimento de voz
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (!SpeechRecognition) {
+          alert("Seu navegador não suporta reconhecimento de voz.");
+          return;
+        }
+
+        const recognition = new SpeechRecognition();
+        recognition.lang = origem;
+        recognition.interimResults = false;
+
+        recognition.onstart = () => {
+          document.getElementById("textoReconhecido").textContent = "🎙️ Ouvindo...";
+          document.getElementById("traducao").textContent = "";
+        };
+
+        recognition.onresult = (event) => {
+          const texto = event.results[0][0].transcript;
+          document.getElementById("textoReconhecido").textContent = texto;
+
+          // Enviar o texto para o backend para traduzir
+          fetch("/traduzir", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ texto: texto, destino: destino })
+          })
+          .then(res => res.json())
+          .then(data => {
+            if (data.sucesso) {
+              document.getElementById("traducao").textContent = data.traducao;
+            } else {
+              document.getElementById("traducao").textContent = "Erro: " + data.erro;
+            }
+          })
+          .catch(err => {
+            document.getElementById("traducao").textContent = "Erro na requisição: " + err.message;
+          });
+        };
+
+        recognition.onerror = (event) => {
+          document.getElementById("textoReconhecido").textContent = "Erro: " + event.error;
+        };
+
+        recognition.start();
+      });
+    </script>
 </body>
 </html>
